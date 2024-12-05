@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+    <!-- 게시글 저장 쿼리 -->
+    <insert id="save" parameterType="board">
+        insert into board_table(boardWriter, boardPass, boardTitle, boardContents)
+        values(#{boardWriter}, #{boardPass}, #{boardTitle}, #{boardContents})
+    </insert>
+    
+    <!-- 모든 게시글 조회 쿼리 (내림차순 정렬) -->
+    <select id="findAll" resultType="board">
+    	select * from board_table order by id desc
+    </select>
+    
+    <!-- 게시글 ID로 조회 -->
+    <select id="findById" parameterType="Long" resultType="board">
+    	select * from board_table where id =#{id}
+    </select>
+    
+    <!-- 게시글 조회수 증가 쿼리 -->
+    <update id="updateHits" parameterType="Long">
+   		 update board_table set boardHits = boardHits + 1 where id=#{id}
+    </update>
+    
+    <!-- 게시글 삭제 쿼리 -->
+    <delete id="delete" parameterType="Long">
+    delete from board_table where id=#{id}
+    </delete>
+    
+    <!-- 게시글 수정 쿼리 -->
+    <update id="update" parameterType="board">
+    	update board_table set boardTitle=#{boardTitle}, boardContents=#{boardContents}
+    	where id=#{id}
+    </update>
+    
+    <!-- 페이징된 게시글 목록 조회 쿼리 -->
+    <select id="pagingList" parameterType="java.util.HashMap" resultType="board"> 
+    select * from board_table order by id desc limit #{start},#{limit}    
+    </select>
+    
+    <!-- 전체 게시글 수 조회 쿼리 -->
+    <select id="boardCount" resultType="Integer">
+        select count(id) from board_table
+    </select>
+</mapper> 
